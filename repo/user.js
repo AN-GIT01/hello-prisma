@@ -18,14 +18,14 @@ const createDbUser = async (user) => {
   }
 };
 
-const findUserByName = async (name) => {
+const findUserByUsername = async (username) => {
   try {
     const dbUser = await prisma.user.findFirst({
-      where: { name: name },
+      where: { username: username },
     });
     return dbUser;
   } catch (err) {
-    console.log("findUserByName error: " + err.message);
+    console.log("findUserByUsername error: " + err.message);
   }
 };
 
@@ -46,4 +46,4 @@ const findUserById = async (id) => {
 };
 
 //   module.exports = { getAllUsers, getUserById, createUser, deleteUser, updateUser };
-module.exports = { createDbUser, findUserByName, findUserById };
+module.exports = { createDbUser, findUserByUsername, findUserById };

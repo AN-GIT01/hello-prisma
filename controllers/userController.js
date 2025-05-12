@@ -1,23 +1,29 @@
 const { json } = require("express");
-const { createDbUser, findUserByName, findUserById } = require("../repo/user");
+const { createDbUser, findUserByUsername, findUserById } = require("../repo/user");
+
+const RoleEnum = {
+  ADMIN: "1111",
+  USER: "2222",
+  EDITOR: "3333"
+}
 
 const handleCreateUser = async (req, res) => {
-  const { name, pwd, role } = req.body.user;
-  if (!name || !pwd || !role)
+  const { username, password, role } = req.body.user;
+  if (!username || !password || !role)
     return res
       .status(400)
-      .json({ message: "Username, password and role are required" });
+      .json({ message: "Userusername, password and role are required" });
 
-  // check for duplicate usernames
-  dbUser = await findUserByName(name);
+  // check for duplicate userusernames
+  dbUser = await findUserByUsername(username);
   if (dbUser)
     return res
       .status(409)
-      .json({ message: "User with this name already exists" }); //Conflict
+      .json({ message: "User with this username already exists" }); //Conflict
   try {
     const resDb = await createDbUser({
-      name: name,
-      pwd: pwd,
+      username: username,
+      password: password,
       role: role,
     });
     return res.status(resDb.code).json(resDb.data);
@@ -41,6 +47,12 @@ const handleGetUserById = async (req, res) => {
   }
 
   const resDb = await findUserById(val);
+  let newRoles = {}
+  resDb.data.role.map(role =>{
+    newRoles[role] = RoleEnum[role]    
+  })
+  console.log(newRoles)
+  resDb.data.role = newRoles
   return res.status(resDb.code).json(resDb.data);
 
 

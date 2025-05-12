@@ -16,8 +16,9 @@ datasource db {
 
 model User{
   id Int @id @default(autoincrement())
-  name String @unique
-  pwd String 
+  username String @unique
+  password String
+  refreshToken String @default("")
   role Role[] @default([USER])
 }
 
